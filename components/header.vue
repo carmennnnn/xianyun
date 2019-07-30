@@ -5,7 +5,7 @@
       <el-row type="flex" justify="space-between">
         <!-- logo -->
         <div class="logo">
-          <img src="/images/logo.jpg" alt="#" />
+          <img src="http://157.122.54.189:9093/images/logo.jpg" alt="#" />
         </div>
 
         <!-- 菜单 -->
