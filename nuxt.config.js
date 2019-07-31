@@ -36,7 +36,9 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    // 这是导入vuex的插件 vuex-persistedstate插件
+    { src: '@/plugins/localStorage', ssr: false }
   ],
 
   /*
