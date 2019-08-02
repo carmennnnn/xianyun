@@ -38,7 +38,21 @@
     </h2>
 
     <!-- 特价机票 -->
-    <div class="air-sale"></div>
+    <div class="air-sale">
+      <el-row class="air-sale-pic">
+        <el-col :span="6" v-for="(item,index) in sales" :key="index">
+          <nuxt-link
+            to="http://157.122.54.189:9093/air/flights?departCity=%E5%B9%BF%E5%B7%9E&departCode=CAN&destCity=%E4%B8%8A%E6%B5%B7&destCode=SHA&departDate=2019-08-02"
+          >
+            <img :src="item.cover" alt />
+          </nuxt-link>
+          <el-row class="layer-bar" type="flex" justify="space-between">
+            <span>{{item.departCity}}--{{item.departCode}}</span>
+            <span>￥699</span>
+          </el-row>
+        </el-col>
+      </el-row>
+    </div>
   </section>
 </template>
 
@@ -47,6 +61,30 @@
 import searchForm from "@/pages/air/searchForm";
 
 export default {
+  data() {
+    return {
+      sales: [
+        // {
+        //   cover:
+        //     "https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/s%3D220/sign=9154c841bcfd5266a32b3b169b199799/3812b31bb051f8199687c7e0d0b44aed2f73e7fe.jpg",
+        //   departCity: "广州",
+        //   departCode: "CAN",
+        //   departDate: "2019-06-17",
+        //   destCity: "上海",
+        //   destCode: "SHA",
+        //   price: 760
+        // }
+      ]
+    };
+  },
+  mounted() {
+    this.$axios({
+      url: `/airs/sale`
+    }).then(res => {
+      this.sales = res.data.data;
+      console.log(res);
+    });
+  },
   components: {
     searchForm
   }
