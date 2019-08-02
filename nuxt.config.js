@@ -38,7 +38,10 @@ export default {
   plugins: [
     '@/plugins/element-ui',
     // 这是导入vuex的插件 vuex-persistedstate插件
-    { src: '@/plugins/localStorage', ssr: false }
+    { src: '@/plugins/localStorage', ssr: false },
+    //导入`axios`的拦截器
+    '@/plugins/axios'
+
   ],
 
   /*
