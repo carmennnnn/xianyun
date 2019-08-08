@@ -5,7 +5,7 @@
       <input type="text" placeholder="请输入想去的地方，比如：'广州'" class="search" />
       <i class="el-icon-search"></i>
     </div>
-    <!-- 推荐:可跳转关键词 -->
+    <!-- 推荐:搜索关键词 -->
     <div class="search-recommend">
       <el-row>
         推荐：
