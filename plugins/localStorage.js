@@ -1,13 +1,9 @@
-// 这个是使用插入插件vuex-persistedstate`，该插件会把本地存储的数据读取到`store`。
-
 import createPersistedState from 'vuex-persistedstate'
 
-export default ({
-  store
-}) => {
+export default ({ store }) => {
   window.onNuxtReady(() => {
     createPersistedState({
-      key: "store", // 读取本地存储的数据到store
+      key: 'store'
     })(store)
   })
 }
