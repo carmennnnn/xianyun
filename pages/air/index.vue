@@ -1,206 +1,179 @@
 <template>
-  <section class="container">
-    <h2 class="air-title">
-      <span class="iconfont iconfeiji"></span>
-      <i>国内机票</i>
+  <div class="airTicket w">
+    <!-- 标题 -->
+    <h2>
+      <i class="iconfont iconfeiji"></i> 国内机票
     </h2>
-
-    <!-- 搜索广告栏 -->
-    <el-row type="flex" justify="space-between">
-      <!-- 搜索表单 -->
-      <searchForm />
-
-      <!-- banner广告 -->
-      <div class="sale-banner">
-        <img src="http://157.122.54.189:9093/images/pic_sale.jpeg" />
+    <!-- 内容部分 -->
+    <el-row type="flex" justify="space-between" class="airContent">
+      <div class="search">
+        <el-row type="flex" justify="space-between">
+          <span
+            v-for="(item,index) in ['单程','往返']"
+            :key="index"
+            @click=" handleClick(index)"
+            :class="{active:current==index}"
+          >
+            <i v-if="index==0" class="iconfont icondancheng"></i>
+            <i v-if="index==1" class="iconfont iconshuangxiang"></i>
+            {{item}}
+          </span>
+        </el-row>
+        <!-- 搜索样式部分 -->
+        <searchForm />
+      </div>
+      <div class="market">
+        <img src="http://157.122.54.189:9093/images/pic_sale.jpeg" alt />
       </div>
     </el-row>
-
-    <!-- 广告 -->
-    <el-row type="flex" class="statement">
+    <!-- 提供的服务部分 -->
+    <el-row class="servie">
       <el-col :span="8">
-        <i class="iconfont iconweibiaoti-_huabanfuben" style="color:#409EFF;"></i>
-        <span>100%航协认证</span>
+        <span>
+          <i class="iconfont iconweibiaoti-_huabanfuben"></i> 100%航协认证
+        </span>
       </el-col>
       <el-col :span="8">
-        <i class="iconfont iconbaozheng" style="color:green;"></i>
-        <span>出行保证</span>
+        <span>
+          <i class="iconfont iconbaozheng"></i> 出行保证
+        </span>
       </el-col>
       <el-col :span="8">
-        <i class="iconfont icondianhua" style="color:#409EFF;"></i>
-        <span>7x24小时服务</span>
+        <span class="lastRight">
+          <i class="iconfont icondianhua"></i> 7*24小时服务
+        </span>
       </el-col>
     </el-row>
 
-    <h2 class="air-sale-title">
-      <span class="iconfont icontejiajipiao"></span>
-      <i>特价机票</i>
+    <!-- 特价机票标题 -->
+    <h2>
+      <i class="iconfont icontejiajipiao"></i>特价机票
     </h2>
-
-    <!-- 特价机票 -->
-    <div class="air-sale">
-      <el-row class="air-sale-pic">
-        <el-col :span="6" v-for="(item,index) in sales" :key="index">
-          <nuxt-link
-            to="http://157.122.54.189:9093/air/flights?departCity=%E5%B9%BF%E5%B7%9E&departCode=CAN&destCity=%E4%B8%8A%E6%B5%B7&destCode=SHA&departDate=2019-08-02"
-          >
-            <img :src="item.cover" alt />
-          </nuxt-link>
-          <el-row class="layer-bar" type="flex" justify="space-between">
-            <span>{{item.departCity}}--{{item.departCode}}</span>
-            <span>￥699</span>
+    <!-- 特价机票内容部分 -->
+    <div class="specialTicket">
+      <el-row type="flex" justify="space-around">
+        <nuxt-link
+          :to="`/air/flights?departCity=${item.departCity}&departCode=${item.departCode}&destCity=${item.destCity}&destCode=${item.destCode}&departDate=${item.departDate}`"
+          v-for="(item,index) in recomendAir"
+          :key="index"
+        >
+          <img :src="item.cover" alt />
+          <el-row type="flex" justify="space-between" class="bgSpace">
+            <span>{{item.departCity}}-{{item.destCity}}</span>
+            <span>￥{{Number(item.price).toFixed(2)}}</span>
           </el-row>
-        </el-col>
+        </nuxt-link>
       </el-row>
     </div>
-  </section>
+  </div>
 </template>
-
+ 
 <script>
-// 导入搜索栏
-import searchForm from "@/pages/air/searchForm";
-
+// 引入组件
+import searchForm from '@/components/air/searchForm'
 export default {
-  data() {
-    return {
-      sales: [
-        // {
-        //   cover:
-        //     "https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/s%3D220/sign=9154c841bcfd5266a32b3b169b199799/3812b31bb051f8199687c7e0d0b44aed2f73e7fe.jpg",
-        //   departCity: "广州",
-        //   departCode: "CAN",
-        //   departDate: "2019-06-17",
-        //   destCity: "上海",
-        //   destCode: "SHA",
-        //   price: 760
-        // }
-      ]
-    };
-  },
-  mounted() {
-    this.$axios({
-      url: `/airs/sale`
-    }).then(res => {
-      this.sales = res.data.data;
-      console.log(res);
-    });
-  },
   components: {
     searchForm
+  },
+  data() {
+    return {
+      current: 0,
+      recomendAir: []
+    }
+  },
+  methods: {
+    // 点击单程或者往返的时候的效果
+    handleClick(index) {
+      // console.log(index)
+      this.current = index
+    }
+  },
+  mounted() {
+    // 获取推荐机票的图片信息
+    this.$axios({
+      url: '/airs/sale'
+    }).then(res => {
+      // console.log(res)
+      this.recomendAir = res.data.data
+      // console.log(this.recomendAir)
+    })
   }
-};
+}
 </script>
-
-<style scoped lang="less">
-.air-sale {
-  border: 1px #ddd solid;
-  padding: 20px;
-  margin-bottom: 50px;
-
-  .air-sale-pic {
-    > div {
+<style lang="less" scoped>
+.airTicket {
+  h2 {
+    margin: 10px 0;
+    color: #ffa500;
+    i {
+      font-size: 22px;
+    }
+  }
+  .airContent {
+    margin-bottom: 30px;
+    .search {
+      width: 360px;
+      height: 350px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      // /deep/ .el-tabs {
+      //   width: 100%;
+      // }
+      span {
+        width: 360/2px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        background: #eee;
+      }
+      .active {
+        background-color: #fff;
+        border-top: 5px solid #ffa500;
+      }
+    }
+    .market {
+    }
+  }
+  .servie {
+    height: 40px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    padding: 5px 0;
+    margin-bottom: 20px;
+    span {
+      display: block;
+      height: 100%;
+      text-align: center;
+      border-right: 1px solid #ccc;
+    }
+    .lastRight {
+      border-right: none;
+    }
+  }
+  .specialTicket {
+    padding-top: 20px;
+    width: 100%;
+    height: 162px;
+    border: 1px solid #ddd;
+    a {
+      display: block;
       width: 225px;
       height: 140px;
-      position: relative;
       overflow: hidden;
-
       img {
         width: 100%;
       }
-
-      .layer-bar {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        background: rgba(0, 0, 0, 0.5);
+      .bgSpace {
+        width: 225px;
+        background-color: #61615e;
+        opacity: 0.8;
         color: #fff;
-        height: 30px;
-        line-height: 30px;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 0 15px;
-        font-size: 14px;
-
-        span:last-child {
-          font-size: 18px;
-        }
+        position: absolute;
+        bottom: 0px;
       }
     }
   }
 }
-
-.air-sale-group {
-  margin-top: 20px;
-  padding-top: 8px;
-  border-right: 1px #eee solid;
-
-  &:last-child {
-    border-right: none;
-  }
-
-  .air-sale-row {
-    font-size: 12px;
-    color: #666;
-    margin-bottom: 8px;
-
-    .air-sale-price {
-      color: orange;
-      font-size: 20px;
-    }
-  }
-}
-
-.container {
-  width: 1000px;
-  margin: 0 auto;
-}
-
-.air-title {
-  margin: 15px 0;
-  font-size: 20px;
-  font-weight: normal;
-  color: orange;
-
-  span {
-    font-size: 20px;
-  }
-}
-
-.statement {
-  margin: 15px 0;
-  border: 1px #ddd solid;
-  background: #f5f5f5;
-  height: 58px;
-  padding: 10px 0;
-  box-sizing: border-box;
-
-  > div {
-    text-align: center;
-    line-height: 38px;
-    border-right: 1px #ddd solid;
-
-    &:last-child {
-      border-right: none;
-    }
-
-    * {
-      vertical-align: middle;
-    }
-
-    i {
-      font-size: 30px;
-    }
-  }
-}
-
-.air-sale-title {
-  margin: 15px 0;
-  font-size: 20px;
-  font-weight: normal;
-  color: #409eff;
-
-  span {
-    font-size: 20px;
-  }
-}
 </style>
+
+
